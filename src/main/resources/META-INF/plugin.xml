@@ -1,0 +1,62 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>dev.gaphunter.envvarmissingcompanion</id>
+    <name>Env Var Missing Companion</name>
+    <vendor>Gap Hunter Labs</vendor>
+    <description><![CDATA[
+        <p>Cross-checks every real environment-variable access in your
+        open file (<code>process.env.PORT</code>,
+        <code>process.env["PORT"]</code>, <code>os.environ["DEBUG"]</code>,
+        <code>os.environ.get("DEBUG")</code>, <code>os.getenv("TIMEOUT")</code>)
+        against your project's real <code>.env</code>/<code>.env.example</code>
+        files, and warns on any variable that's <b>used in code but never
+        declared</b> anywhere -- with a real quick-fix to add it.</p>
+        <p><b>Scope (v0.1, deliberate):</b></p>
+        <ul>
+            <li>Scans the file currently open in the editor, not the whole
+            project on every keystroke -- the real, common case (you just
+            typed a new <code>process.env.X</code> reference and want to
+            know right now if it's declared).</li>
+            <li>JavaScript/TypeScript and Python -- the two ecosystems
+            where reading env vars by string key
+            (<code>process.env.X</code>/<code>os.environ[...]</code>) is
+            the dominant pattern. Java/Kotlin are out of v0.1: that
+            ecosystem's dominant pattern is Spring's
+            <code>@Value</code>/<code>application.properties</code>
+            injection, not direct <code>System.getenv</code> calls, so
+            this specific code&harr;.env cross-check pattern is
+            comparatively far less common there.</li>
+            <li>A variable with an explicit default right in the code
+            (<code>process.env.PORT || 3000</code>,
+            <code>os.environ.get("DEBUG", "false")</code>,
+            <code>os.getenv("TIMEOUT", 30)</code>) is flagged as a weaker
+            warning, not a full warning -- the code still runs fine
+            without it declared, so it's real but less urgent.</li>
+        </ul>
+        <p><b>Quick-fix:</b> "Add VARNAME to .env.example" appends
+        <code>VARNAME=</code> to your project's real
+        <code>.env.example</code> -- or creates one from scratch (with a
+        header comment noting it was generated) if your project has none
+        at all.</p>
+        <p>Complements Env Diff Companion (which compares two
+        <code>.env</code> files against each other) -- this plugin
+        compares your actual <b>code</b> against your <code>.env</code>
+        files instead.</p>
+        <p>100% static text analysis of files already open in your
+        project -- no network call, no external process spawned. A
+        project with no <code>.env*</code> file at all is handled as an
+        honest "everything referenced is unmatched" case, never a crash.</p>
+        <p>Free. No license nags, no telemetry, no popups.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection language=""
+            groupName="Env Var Missing Companion"
+            displayName="Env var used but not declared in .env"
+            enabledByDefault="true"
+            level="WARNING"
+            implementationClass="dev.gaphunter.envvarmissingcompanion.inspection.MissingEnvVarInspection"/>
+    </extensions>
+</idea-plugin>
