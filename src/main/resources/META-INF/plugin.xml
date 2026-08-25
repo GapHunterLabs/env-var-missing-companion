@@ -58,5 +58,6 @@
             enabledByDefault="true"
             level="WARNING"
             implementationClass="dev.gaphunter.envvarmissingcompanion.inspection.MissingEnvVarInspection"/>
+        <notificationGroup id="Env Var Missing Companion" displayType="BALLOON"/>
     </extensions>
 </idea-plugin>

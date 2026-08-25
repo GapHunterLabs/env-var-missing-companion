@@ -13,6 +13,7 @@ import com.intellij.psi.PsiFile
 import dev.gaphunter.envvarmissingcompanion.detect.EnvVarReferenceScanner
 import dev.gaphunter.envvarmissingcompanion.parse.DeclaredEnvVarsLocator
 import dev.gaphunter.envvarmissingcompanion.quickfix.AddVariableToEnvExampleFix
+import dev.gaphunter.envvarmissingcompanion.review.ReviewPrompt
 
 /**
  * Cross-checks every real environment-variable access found in the
@@ -94,6 +95,9 @@ class MissingEnvVarInspection : LocalInspectionTool() {
                 isOnTheFly,
                 AddVariableToEnvExampleFix(ref.name),
             )
+
+            val lineNumber = file.viewProvider.document?.getLineNumber(ref.nameStartOffset) ?: -1
+            ReviewPrompt.recordHit(file.project, "${virtualFile.path}:$lineNumber:${ref.name}")
         }
 
         return if (problems.isEmpty()) null else problems.toTypedArray()
