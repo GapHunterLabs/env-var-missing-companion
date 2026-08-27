@@ -12,7 +12,7 @@ open in your project: no network call, no external process spawned.
 ## Why it exists
 
 An original idea, not a port of an existing competitor — validated
-against `CONSTITUTION.md` §1's "Plan B permanente" discipline before
+against this catalog's own idea-validation discipline before
 being built: (1) confirmed no plugin in this catalog or in JetBrains
 Marketplace does exactly this cross-check (searches for "env var
 missing" surface AI-driven secrets-management tools or run-config
@@ -132,8 +132,8 @@ check just because there was nothing to compare against.
   either a persistent index (real infrastructure, out of v0.1 scope)
   or re-scanning every file in the project on every keystroke — the
   exact cost this design avoids, same "heavy computation off the hot
-  path" principle already applied catalog-wide (`CONSTITUTION.md` §6),
-  just applied at the scope-selection level here instead of threading.
+  path" principle already applied catalog-wide, just applied at the
+  scope-selection level here instead of threading.
   "The file already open" is also the real, common use case: a
   developer adding a new `process.env.X` reference wants to know right
   there whether it's declared.
@@ -144,8 +144,8 @@ check just because there was nothing to compare against.
   without a `language` filter in `plugin.xml`.
 - **Leaf PSI anchoring for each `ProblemDescriptor`.** A `ProblemDescriptor`/
   `LineMarkerInfo` anchored on a composite PSI node (instead of a real
-  leaf token) is a documented platform gotcha (`SDK_GOTCHAS.md` §20) —
-  this inspection always walks down to a true leaf element before
+  leaf token) is a documented platform gotcha — this inspection always
+  walks down to a true leaf element before
   creating a descriptor, using the platform's own relative-`TextRange`
   overload (confirmed via `javap` against the pinned platform jar) to
   point at the exact variable name text within that leaf, not the

@@ -25,8 +25,8 @@ import dev.gaphunter.envvarmissingcompanion.review.ReviewPrompt
  * **Scope, deliberate (see README "Why built this way"):** only the file
  * open in the editor is scanned, not the whole project on every
  * keystroke -- same "heavy computation off the hot path" principle
- * already applied catalog-wide (see `CONSTITUTION.md` §6), just applied
- * at the scope-selection level instead of threading: a whole-project
+ * already applied catalog-wide, just applied at the scope-selection
+ * level instead of threading: a whole-project
  * scan cheap enough to run inline on every inspection pass would need
  * either a persistent index (real infrastructure, out of v0.1 scope) or
  * re-scanning every file in the project on every keystroke (the exact
@@ -71,8 +71,7 @@ class MissingEnvVarInspection : LocalInspectionTool() {
             // file -- confirmed via javap against the real platform jar
             // (InspectionManager.createProblemDescriptor(PsiElement,
             // TextRange, String, ProblemHighlightType, boolean,
-            // LocalQuickFix...)), see CONSTITUTION.md SS6 on verifying
-            // platform API signatures instead of guessing.
+            // LocalQuickFix...)) instead of guessing at the signature.
             val relativeRange = TextRange(ref.nameStartOffset - anchorStart, ref.nameEndOffset - anchorStart)
             if (relativeRange.startOffset < 0 || relativeRange.endOffset > anchor.textLength) continue
 
@@ -127,8 +126,8 @@ class MissingEnvVarInspection : LocalInspectionTool() {
     /**
      * Resolves a leaf PSI element covering [startOffset] -- never a
      * composite node. Anchoring `ProblemDescriptor`/`LineMarkerInfo` on a
-     * composite node is a real, documented platform gotcha (see
-     * `SDK_GOTCHAS.md` §20): only leaf elements are safe here. Since
+     * composite node is a real, documented platform gotcha: only leaf
+     * elements are safe here. Since
      * detection is plain-text (no guarantee the PSI tree for this file
      * type even has meaningful structure at this offset), this walks
      * down to `firstChild` until a true leaf (`firstChild == null`) is
