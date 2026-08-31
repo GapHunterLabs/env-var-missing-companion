@@ -2,12 +2,13 @@
 
 IntelliJ-family plugin. Cross-checks every real environment-variable
 access in your open file (`process.env.PORT`,
-`process.env["PORT"]`, `os.environ["DEBUG"]`,
-`os.environ.get("DEBUG")`, `os.getenv("TIMEOUT")`) against your
-project's real `.env`/`.env.example`/etc. files, and warns on any
-variable that's **used in code but never declared anywhere** — with a
-real quick-fix to add it. 100% static text analysis of files already
-open in your project: no network call, no external process spawned.
+`process.env["PORT"]`, `import.meta.env.VITE_API_URL`,
+`os.environ["DEBUG"]`, `os.environ.get("DEBUG")`,
+`os.getenv("TIMEOUT")`) against your project's real
+`.env`/`.env.example`/etc. files, and warns on any variable that's
+**used in code but never declared anywhere** — with a real quick-fix to
+add it. 100% static text analysis of files already open in your
+project: no network call, no external process spawned.
 
 ## Why it exists
 
@@ -40,6 +41,10 @@ there's evidence of adoption.
 **JavaScript/TypeScript:**
 - `process.env.VARNAME`
 - `process.env["VARNAME"]` / `process.env['VARNAME']`
+- `import.meta.env.VARNAME` / `import.meta.env["VARNAME"]` /
+  `import.meta.env['VARNAME']` — Vite's standard way to read env vars in
+  browser-bundled code, where Node's `process.env` isn't available at
+  runtime.
 
 **Python:**
 - `os.environ["VARNAME"]` / `os.environ['VARNAME']`

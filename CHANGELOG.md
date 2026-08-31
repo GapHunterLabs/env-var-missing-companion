@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+## [0.2.0]
+
+### Added
+
+- Detects Vite's `import.meta.env.VARNAME` / `import.meta.env["VARNAME"]`
+  / `import.meta.env['VARNAME']` -- the standard way to read env vars in
+  browser-bundled JS/TS code, where Node's `process.env` isn't available
+  at runtime. Same real-access-only and explicit-default rules as
+  `process.env`.
+
 ## [0.1.1]
 
 ### Added
@@ -48,6 +58,7 @@
 - 100% static text analysis of files already open in the project --
   no network call, no external process spawned.
 
-[Unreleased]: https://github.com/GapHunterLabs/env-var-missing-companion/compare/0.1.1...HEAD
+[Unreleased]: https://github.com/GapHunterLabs/env-var-missing-companion/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/GapHunterLabs/env-var-missing-companion/compare/0.1.1...0.2.0
 [0.1.1]: https://github.com/GapHunterLabs/env-var-missing-companion/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/GapHunterLabs/env-var-missing-companion/commits/0.1.0

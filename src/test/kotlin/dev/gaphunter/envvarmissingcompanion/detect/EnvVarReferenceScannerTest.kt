@@ -26,6 +26,37 @@ class EnvVarReferenceScannerTest {
     }
 
     @Test
+    fun `finds import-meta-env dot access`() {
+        val refs = EnvVarReferenceScanner.scan("""const apiUrl = import.meta.env.VITE_API_URL;""")
+        assertEquals(listOf("VITE_API_URL"), refs.map { it.name })
+        assertEquals(false, refs.single().hasExplicitDefault)
+    }
+
+    @Test
+    fun `finds import-meta-env double-quoted bracket access`() {
+        val refs = EnvVarReferenceScanner.scan("""const apiUrl = import.meta.env["VITE_API_URL"];""")
+        assertEquals(listOf("VITE_API_URL"), refs.map { it.name })
+    }
+
+    @Test
+    fun `finds import-meta-env single-quoted bracket access`() {
+        val refs = EnvVarReferenceScanner.scan("""const apiUrl = import.meta.env['VITE_API_URL'];""")
+        assertEquals(listOf("VITE_API_URL"), refs.map { it.name })
+    }
+
+    @Test
+    fun `detects js double-pipe default on import-meta-env access`() {
+        val refs = EnvVarReferenceScanner.scan("""const port = import.meta.env.VITE_PORT || 3000;""")
+        assertEquals(true, refs.single().hasExplicitDefault)
+    }
+
+    @Test
+    fun `plain mention of import-meta-env without real access does not match`() {
+        val refs = EnvVarReferenceScanner.scan("""// Vite exposes build-time vars via import.meta.env""")
+        assertTrue(refs.isEmpty())
+    }
+
+    @Test
     fun `finds python os-environ double-quoted bracket access`() {
         val refs = EnvVarReferenceScanner.scan("""port = os.environ["PORT"]""")
         assertEquals(listOf("PORT"), refs.map { it.name })

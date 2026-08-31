@@ -13,6 +13,10 @@ package dev.gaphunter.envvarmissingcompanion.detect
  * there instead of direct `System.getenv`):
  *
  * - JS/TS: `process.env.VARNAME`, `process.env["VARNAME"]`, `process.env['VARNAME']`
+ * - JS/TS (Vite): `import.meta.env.VARNAME`, `import.meta.env["VARNAME"]`,
+ *   `import.meta.env['VARNAME']` -- the standard way to read env vars in
+ *   browser-bundled code, where Node's `process.env` isn't available at
+ *   runtime. Same real-access-only rule applies.
  * - Python: `os.environ["VARNAME"]`, `os.environ['VARNAME']`,
  *   `os.environ.get("VARNAME")`, `os.getenv("VARNAME")`
  *
@@ -39,6 +43,14 @@ object EnvVarReferenceScanner {
     // --- JavaScript/TypeScript: process.env["NAME"] / process.env['NAME'] ---
     private val JS_BRACKET = Regex(
         """process\.env\[\s*(["'])([A-Za-z_][A-Za-z0-9_]*)\1\s*\]"""
+    )
+
+    // --- JavaScript/TypeScript (Vite): import.meta.env.NAME ---
+    private val JS_IMPORT_META_DOT = Regex("""import\.meta\.env\.([A-Za-z_][A-Za-z0-9_]*)""")
+
+    // --- JavaScript/TypeScript (Vite): import.meta.env["NAME"] / import.meta.env['NAME'] ---
+    private val JS_IMPORT_META_BRACKET = Regex(
+        """import\.meta\.env\[\s*(["'])([A-Za-z_][A-Za-z0-9_]*)\1\s*\]"""
     )
 
     // --- Python: os.environ["NAME"] / os.environ['NAME'] ---
@@ -80,6 +92,26 @@ object EnvVarReferenceScanner {
         }
 
         for (match in JS_BRACKET.findAll(text)) {
+            val nameGroup = match.groups[2]!!
+            results += EnvVarReference(
+                name = nameGroup.value,
+                nameStartOffset = nameGroup.range.first,
+                nameEndOffset = nameGroup.range.last + 1,
+                hasExplicitDefault = hasJsTrailingDefault(text, match.range.last + 1),
+            )
+        }
+
+        for (match in JS_IMPORT_META_DOT.findAll(text)) {
+            val nameGroup = match.groups[1]!!
+            results += EnvVarReference(
+                name = nameGroup.value,
+                nameStartOffset = nameGroup.range.first,
+                nameEndOffset = nameGroup.range.last + 1,
+                hasExplicitDefault = hasJsTrailingDefault(text, match.range.last + 1),
+            )
+        }
+
+        for (match in JS_IMPORT_META_BRACKET.findAll(text)) {
             val nameGroup = match.groups[2]!!
             results += EnvVarReference(
                 name = nameGroup.value,
