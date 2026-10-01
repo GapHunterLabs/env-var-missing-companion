@@ -10,6 +10,13 @@ access in your open file (`process.env.PORT`,
 add it. 100% static text analysis of files already open in your
 project: no network call, no external process spawned.
 
+![Env Var Missing Companion: catch env vars your code reads but no .env file declares](docs/media/hero.gif)
+
+Each feature on its own:
+[Node.js](docs/media/01-javascript.gif) ·
+[Quick-fix](docs/media/02-quick-fix.gif) ·
+[Python](docs/media/03-python.gif)
+
 ## Why it exists
 
 An original idea, not a port of an existing competitor — validated
