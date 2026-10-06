@@ -1,0 +1,11 @@
+<html>
+<body>
+Reports an environment variable read in code (<code>process.env.PORT</code>, <code>process.env["PORT"]</code>,
+<code>os.environ["DEBUG"]</code>, <code>os.environ.get("DEBUG")</code>, <code>os.getenv("TIMEOUT")</code>) that is not declared
+in any of the project's <code>.env</code> or <code>.env.example</code> files.
+<!-- tooltip end -->
+<p>An undeclared variable is usually missing in some environment, where the code then runs with an empty value. The
+quick fix adds the variable to the <code>.env</code> file. JavaScript, TypeScript and Python files are checked, one open
+file at a time.</p>
+</body>
+</html>
