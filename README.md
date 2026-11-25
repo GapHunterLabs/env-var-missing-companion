@@ -19,29 +19,7 @@ Each feature on its own:
 
 ## Why it exists
 
-An original idea, not a port of an existing competitor — validated
-against this catalog's own idea-validation discipline before
-being built: (1) confirmed no plugin in this catalog or in JetBrains
-Marketplace does exactly this cross-check (searches for "env var
-missing" surface AI-driven secrets-management tools or run-config
-drift detectors, none of which cross-reference actual `process.env`/
-`os.environ` accesses in source against `.env*` file contents); (2)
-confirmed buildable in the ~10-day budget with techniques this catalog
-already has proven — `.env` file parsing adapted from
-`env-diff-companion`'s already-shipped `EnvFileParser`, plain-text/
-regex scanning of source (same principle as
-`circular-dependency-companion`'s Gradle DSL parser and
-`dockerfile-layer-size-companion`'s Dockerfile parser), and a
-`LocalInspectionTool` + `LocalQuickFix` — the platform's standard
-warning-plus-fix mechanism, new to this catalog but a well-documented,
-stable API surface (confirmed via `javap` against the pinned platform
-jar, not guessed). Complements, doesn't duplicate, `env-diff-companion`
-(which compares two `.env` files against *each other*, never against
-code). Same "apuesta consciente sin ancla de mercado" treatment as
-Refactor Simulator / Test Scaffold Companion / Circular Dependency
-Companion / Unused npm Script Companion: v0.1 ships free, no time/
-marketing investment disproportionate to real demand signal until
-there's evidence of adoption.
+An original idea, not a port of an existing competitor. Before building it I confirmed that no plugin in JetBrains Marketplace does exactly this cross-check: searches for "env var missing" surface secrets-management tools or run-configuration drift detectors, and none of them compare the real `process.env` / `os.environ` accesses in source against the contents of the `.env*` files. It reuses the `.env` parser of `env-diff-companion`, scans source with plain text and regex, and reports through the platform's standard inspection and quick fix. It complements `env-diff-companion`, which compares two `.env` files against each other and never against code. It is free.
 
 ## What it detects (v0.1 scope, stated honestly)
 
